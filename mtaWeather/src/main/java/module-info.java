@@ -3,6 +3,7 @@ module mtaWeather {
     requires javafx.graphics;
     requires javafx.fxml;
 
+    requires org.json;
     opens mtaWeather.controller;
     opens mtaWeather;
 

@@ -21,6 +21,9 @@ public class mainApp extends Application {
             primaryStage.setScene(new Scene(loader.load()));
             loader.setController(new weatherController());
 
+
+
+
             primaryStage.setTitle(windowName);
             primaryStage.setResizable(false);
             primaryStage.show();

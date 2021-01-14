@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-public class citiesData {
+public class CitiesData {
     private static final String defaultCitiesFile="/cities/worldcities.csv";
     //private static final String defaultCitiesFile="/cities/test.txt";
 
@@ -86,10 +86,18 @@ public class citiesData {
 
     }
 
-    public citiesData(String inFile) throws weatherException{
+    public City getCity(String country, String cityName){
+        for(City city : citiesDB){
+            if(city.getName().getValue().equals(cityName) && city.getCountry().getValue().equals(country)){
+                return city;
+            }
+        }
+        return null;
+    }
+    public CitiesData(String inFile) throws weatherException{
         initFromCSV(inFile);
     }
-    public citiesData() throws weatherException{
+    public CitiesData() throws weatherException{
         initFromCSV(defaultCitiesFile);
     }
     public String getIsoOfCountry(String country){

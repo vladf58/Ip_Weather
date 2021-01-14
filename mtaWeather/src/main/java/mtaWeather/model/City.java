@@ -11,7 +11,13 @@ public class City {
     private StringProperty iso2;
 
     private DoubleProperty lat;
+    public DoubleProperty getLat(){
+        return lat;
+    }
     private DoubleProperty lng;
+    public DoubleProperty getLng(){
+        return lng;
+    }
 
     public StringProperty getIso2(){
         return iso2;
