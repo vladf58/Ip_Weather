@@ -18,6 +18,12 @@ import mtaWeather.model.WeekForecast;
 
 import java.util.ArrayList;
 
+/**
+ * The controller for the mtaWeather Application and for the weatherAppView GUI.
+ *
+ * @author Vlad Florea
+ */
+
 public class weatherController {
 
     @FXML
@@ -66,6 +72,9 @@ public class weatherController {
     @FXML
     private Label humidityLabel;
 
+    /**
+     * Lower daily forecast labels
+     */
     @FXML
     private Label day0Label;
     @FXML
@@ -79,6 +88,9 @@ public class weatherController {
     @FXML
     private Label day5Label;
 
+    /**
+     * Lower daily forecast grids
+     */
     @FXML
     private GridPane day0Grid;
     @FXML
@@ -92,6 +104,9 @@ public class weatherController {
     @FXML
     private GridPane day5Grid;
 
+    /**
+     * Lower daily forecast images
+     */
     @FXML
     private ImageView day0Img;
     @FXML
@@ -105,43 +120,69 @@ public class weatherController {
     @FXML
     private ImageView day5Img;
 
+    /**
+     * Weather params images
+     */
     @FXML
     private ImageView tempImg;
-
     @FXML
     private ImageView humidityImg;
-
     @FXML
     private ImageView windImg;
 
+    /**
+     * Arrays for holding lower daily forecast objects
+     */
     private ArrayList<ImageView> dayImgs;
     private ArrayList<Label> dayLabels;
     private ArrayList<GridPane> dayGrids;
 
+    /**
+     * Cities data loaded from the file
+     */
     private CitiesData loadedCities;
 
+    /**
+     * Current displayed city
+     */
     private City crtCity;
 
+    /**
+     * Current forecast for the week
+     */
     private WeekForecast crtForecast;
 
+    /**
+     * Method responsible for loading the ComboBox for the Countries
+     */
     private void loadCoutryDropDown(){
         countryDropDown.setItems(loadedCities.getCountries());
         countryDropDown.setValue(loadedCities.getCountries().get(0));
     }
 
-    private void setLocationOnIp(){
-        countryDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getCountry().getValue());
-        cityDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getName().getValue());
-
-    }
-
-
+    /**
+     * Method responsible for loading the ComboBox for the Cities
+     */
     private void loadCityDropDown(String Country){
         cityDropDown.setItems(loadedCities.getCities(countryDropDown.getValue().toString()));
         cityDropDown.setValue(cityDropDown.getItems().get(0));
 
     }
 
+    /**
+     * Method responsible for setting the current location based on ip
+     */
+    private void setLocationOnIp(){
+        if(IpApiUser.getCityByCrtIp(loadedCities) !=null) {
+            countryDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getCountry().getValue());
+            cityDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getName().getValue());
+        }
+    }
+
+
+    /**
+     * Method responsible for initializing the dayLabels, dayGrids and dayImgs arrays.
+     */
     private void initDaysContent(){
         this.dayLabels = new ArrayList<Label>();
         this.dayGrids = new ArrayList<GridPane>();
@@ -178,49 +219,160 @@ public class weatherController {
 
     }
 
+    /**
+     * Method that sets the images for the Forecast, thermometer, rain, wind.
+     */
     @FXML
     private void setForecastImg(){
         this.tempImg.setImage(new Image(this.getClass().getResource("/icons/thermometer.png").toString()));
-
         this.humidityImg.setImage(new Image(this.getClass().getResource("/icons/rain.png").toString()));
-
         this.windImg.setImage(new Image(this.getClass().getResource("/icons/wind.png").toString()));
 
 
     }
 
+    /**
+     * Method that loads the main pannel with the values for a new day
+     * @param crtForecast -> Current forecast for the day
+     */
+    @FXML
+    private void loadMainPannel(WeatherForecast crtForecast) {
+        if (crtForecast == null) {
+            this.weatherIconImg.setImage(new Image(this.getClass().getResource("/icons/sad.png").toString()));
+            this.weatherDescriptionLabel.setText("No description for this day :(!");
+        }
+        else {
+            /**
+             * Set the date
+             */
+            this.dateLabel.setText(crtForecast.getCrtDate().getValue());
+
+            /**
+             * Set the time
+             *
+             */
+            this.timeLabel.setText(crtForecast.getCrtTime().getValue());
+
+            /**
+             * Set the image
+             */
+            String iconUrl = WeatherIconConstructor.getImageUrl(crtForecast.getWeatherIcon().getValue());
+            this.weatherIconImg.setImage(new Image(iconUrl));
+
+            /**
+             * Set description
+             */
+            String crtForecstDescription = crtForecast.getWeatherMainDescription().getValue();
+            this.weatherDescriptionLabel.setText(crtForecstDescription.substring(0, 1).toUpperCase() + crtForecstDescription.substring(1));
+
+            /**
+             * Set temp values
+             */
+            this.temperatureLabel.setText(crtForecast.getWeatherTemp().getValue());
+            this.windLabel.setText(crtForecast.getWind().getValue());
+            this.humidityLabel.setText(crtForecast.getHumidity().getValue());
+
+        }
+    }
+
+    /**
+     * Method that loads the lower grid with the daily values for the weather
+     * @param crtForecast --> current forecast for the week
+     */
+    @FXML
+    private void loadDailyPannel(WeekForecast crtForecast){
+        /**
+         Load images
+         */
+
+        for(Integer i=0;i<dayImgs.size();i++){
+            ImageView crtImage= dayImgs.get(i);
+            String iconUrl=WeatherIconConstructor.getImageUrl(crtForecast.getForecast().get(i).getWeatherIcon().getValue());
+            crtImage.setImage(new Image(iconUrl));
+        }
+
+        /**
+         * Load temp values
+         */
+        for(Integer i=0;i<dayLabels.size();i++){
+            Label crtLabel=dayLabels.get(i);
+            crtLabel.setText(crtForecast.getForecast().get(i).getCrtDate().getValue());
+        }
+
+    }
+
+    /**
+     * Method that loads the country flag through the FlagApiUser
+     */
+    @FXML
+    private void loadCountryImg(){
+        /**
+         * Display picture
+         */
+        String imgUrl=FlagApiUser.getImageOfFlagUrl(crtCity.getIso2().getValue());
+
+
+        this.countryFlagImg.setImage(new Image(imgUrl));
+    }
+
+    /**
+     * Method that reinitializes the main pannel with the new values for a chosen day from the lower grid.
+     * @param index --> day index
+     */
+    @FXML
+    private void reinitGuiWithSelectedDay(Integer index){
+        WeatherForecast crtWeather;
+        try {
+            crtWeather = crtForecast.getForecast().get(index);
+        }
+        catch (Exception e){
+            crtWeather =null;
+        }
+        loadMainPannel(crtWeather);
+    }
+
+    /**
+     * Initialize method
+     */
     @FXML
     private void initialize(){
         try {
             /**
-             * Init arrays
+             * Initialize the arrays for the lower Grid
              */
             initDaysContent();
             /**
-             * Load cities
+             * Load the Cities from the default Csv file through the factory.
              */
             this.loadedCities = new LocationFactory().generateCitiesFromDefaultCsv();
 
             /**
-             * Set static images
+             * Set images to not resize
              */
             this.countryFlagImg.preserveRatioProperty().setValue(false);
             this.weatherIconImg.preserveRatioProperty().setValue(false);
             this.windImg.preserveRatioProperty().setValue(false);
             this.humidityImg.preserveRatioProperty().setValue(false);
             this.tempImg.preserveRatioProperty().setValue(false);
+
+            /**
+             * Set the forecast Images, i.e wind, thermometer, rain.
+             */
             setForecastImg();
 
             /**
-             * Add events
+             * Country dropdown event.
+             * Lambda function that reinitializes the the city ComboBox with respect to the new Country
              */
             countryDropDown.getSelectionModel().selectedItemProperty().addListener(
                     (observable, oldValue, newValue) -> {
-                        //Event code
                         loadCityDropDown(newValue.toString());
                     });
 
-            //Event Listener for city select
+            /**
+             * City dropdown event.
+             * Lambda function that gets a new forecast for the chosen city
+             */
             cityDropDown.getSelectionModel().selectedItemProperty().addListener(
                     (observable, oldValue, newValue) -> {
                         if(newValue != null) {
@@ -297,91 +449,10 @@ public class weatherController {
         }
     }
 
-    @FXML
-    private void loadMainPannel(WeatherForecast crtForecast) {
-        if (crtForecast == null) {
-            this.weatherIconImg.setImage(new Image(this.getClass().getResource("/icons/sad.png").toString()));
-            this.weatherDescriptionLabel.setText("No description for this day :(!");
-        }
-        else {
-            /**
-             * Set the date
-             */
-            this.dateLabel.setText(crtForecast.getCrtDate().getValue());
 
-            /**
-             * Set the time
-             *
-             */
-            this.timeLabel.setText(crtForecast.getCrtTime().getValue());
-
-            /**
-             * Set the image
-             */
-            String iconUrl = WeatherIconConstructor.getImageUrl(crtForecast.getWeatherIcon().getValue());
-            this.weatherIconImg.setImage(new Image(iconUrl));
-
-            /**
-             * Set description
-             */
-            String crtForecstDescription = crtForecast.getWeatherMainDescription().getValue();
-            this.weatherDescriptionLabel.setText(crtForecstDescription.substring(0, 1).toUpperCase() + crtForecstDescription.substring(1));
-
-            /**
-             * Set temp values
-             */
-            this.temperatureLabel.setText(crtForecast.getWeatherTemp().getValue());
-            this.windLabel.setText(crtForecast.getWind().getValue());
-            this.humidityLabel.setText(crtForecast.getHumidity().getValue());
-
-        }
-    }
-
-    @FXML
-    private void loadDailyPannel(WeekForecast crtForecast){
-        /**
-        Load images
-         */
-
-        for(Integer i=0;i<dayImgs.size();i++){
-            ImageView crtImage= dayImgs.get(i);
-            String iconUrl=WeatherIconConstructor.getImageUrl(crtForecast.getForecast().get(i).getWeatherIcon().getValue());
-            crtImage.setImage(new Image(iconUrl));
-        }
-
-        /**
-         * Load temp values
-         */
-        for(Integer i=0;i<dayLabels.size();i++){
-            Label crtLabel=dayLabels.get(i);
-            crtLabel.setText(crtForecast.getForecast().get(i).getCrtDate().getValue());
-        }
-
-    }
-
-    @FXML
-    private void loadCountryImg(){
-        /**
-         * Display picture
-         */
-        String imgUrl=FlagApiUser.getImageOfFlagUrl(crtCity.getIso2().getValue());
-
-
-        this.countryFlagImg.setImage(new Image(imgUrl));
-    }
-
-    @FXML
-    private void reinitGuiWithSelectedDay(Integer index){
-        WeatherForecast crtWeather;
-        try {
-            crtWeather = crtForecast.getForecast().get(index);
-        }
-        catch (Exception e){
-            crtWeather =null;
-        }
-            loadMainPannel(crtWeather);
-    }
-
+    /**
+     * Contructor
+     */
     public weatherController(){
 
     }

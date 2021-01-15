@@ -1,13 +1,16 @@
 package mtaWeather.model;
-
-import javafx.beans.property.SimpleStringProperty;
 import mtaWeather.Exceptions.BadJSONException;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+/**
+ * Model for a weather forecast for multiple days for a given location.
+
+ *
+ *
+ * @author Vlad Florea
+ */
 
 public class WeekForecast {
     /**
@@ -17,20 +20,23 @@ public class WeekForecast {
     private static final String timezoneOffsetJSON="timezone_offset";
     private static final String dailyJSON="daily";
 
-    public ArrayList<WeatherForecast> getForecast() {
-        return forecast;
-    }
-
     /**
      * List of forecasts
      */
     private ArrayList<WeatherForecast> forecast;
+    public ArrayList<WeatherForecast> getForecast() {
+        return forecast;
+    }
 
+    private WeatherForecast crtForecast;
     public WeatherForecast getCrtForecast() {
         return crtForecast;
     }
 
-    private WeatherForecast crtForecast;
+
+    /**
+     * Offset from UTC for the location.
+     */
     private Long timezoneOffset;
 
     public WeekForecast(JSONObject weatherJSON) throws  BadJSONException{

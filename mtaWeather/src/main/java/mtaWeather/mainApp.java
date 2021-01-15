@@ -1,12 +1,15 @@
 package mtaWeather;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import mtaWeather.controller.weatherController;
-
 import java.io.IOException;
+
+/**
+ * MtaWeather's main function, initializes the scene, loads the GUI.
+ * @author Vlad Florea
+ */
 
 public class mainApp extends Application {
     private static final String windowName="MTA Weather";

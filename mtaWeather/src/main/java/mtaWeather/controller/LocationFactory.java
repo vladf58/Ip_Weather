@@ -12,12 +12,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+/**
+ *This Class is responsible for generating CitiesData objects (see model package)
+ *
+ * @author Vlad Florea
+ */
 public class LocationFactory {
+    /**
+     * Local definitions
+     */
     private static final String defaultCitiesFile="/cities/worldcities.csv";
-    //private static final String defaultCitiesFile="/cities/test.txt";
-
     private static final String defaultColumns[]= {"city","lat","lng","country","id","iso2"};
 
+    /**
+     * Method that generates a CitiesData object based on the default .csv file
+     * @return CitiesData
+     * @throws BadCSVException
+     */
     public  CitiesData generateCitiesFromDefaultCsv() throws BadCSVException{
 
         BufferedReader CSVReader;
@@ -73,6 +84,11 @@ public class LocationFactory {
             throw new BadCSVException("Error with CSV file:"+e.getMessage());
         }
     }
+    /**
+     * Method that generates a CitiesData object based on a given .csv file
+     * @return CitiesData
+     * @throws BadCSVException
+     */
     public   CitiesData generateCitiesFromCsv(String csvFile) throws BadCSVException {
         BufferedReader CSVReader;
         ArrayList<City> citiesDB = new ArrayList<City>();
@@ -131,6 +147,9 @@ public class LocationFactory {
 
     }
 
+    /**
+     * Classes Constructor
+     */
     public LocationFactory(){
 
     }

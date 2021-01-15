@@ -3,16 +3,25 @@ package mtaWeather.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import mtaWeather.Exceptions.BadJSONException;
-import mtaWeather.Exceptions.MtaWeatherException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+/**
+ * Model for a weather forecast for a day
+
+ *
+ *
+ * @author Vlad Florea
+ */
 
 public class WeatherForecast {
 
+    /**
+     * Static members for accessing the JSOn response from the API
+     */
     private static final String listIdentifierArrayJSON="list";
     private static final String coordArrayJSON="coord";
     private static final String lngJSON="lon";
@@ -49,7 +58,6 @@ public class WeatherForecast {
     public StringProperty getLat(){
         return lat;
     }
-
     private StringProperty lng;
     public  StringProperty getLng(){
         return lng;
@@ -82,6 +90,8 @@ public class WeatherForecast {
     public StringProperty getWeatherFeelsLike(){
         return weatherFeelsLike;
     }
+
+
     /**
      * Maximum and minimum temperature at the moment
      */
@@ -93,6 +103,8 @@ public class WeatherForecast {
     public StringProperty getTempMax(){
         return tempMax;
     }
+
+
     /**
      * Humidity
      */
@@ -101,6 +113,8 @@ public class WeatherForecast {
 
         return new SimpleStringProperty(humidity.getValue()+" "+percentMetric);
     }
+
+
     /**
      * Cloudiness
      */
@@ -114,10 +128,20 @@ public class WeatherForecast {
      */
     private StringProperty dt;
 
+    /**
+     * Wind value m/s
+     */
     private StringProperty wind;
     public StringProperty getWind(){
         return new SimpleStringProperty(wind.getValue() +" "+windMetric);
     }
+
+    /**
+     * Constructor from a JSON Object and with a specified shiftTimezone from UTC
+     * @param weatherJSON -> JSON Object received from api
+     * @param shiftTimezone -> shift time(unix time) from UTC.
+     * @throws BadJSONException
+     */
     public WeatherForecast(JSONObject weatherJSON, Long shiftTimezone) throws BadJSONException {
         try {
             /**
@@ -186,6 +210,10 @@ public class WeatherForecast {
         }
     }
 
+    /**
+     * Method that computes the current date as dd/MM/yyyy
+     * @return Current Date
+     */
     public StringProperty getCrtDate(){
         try {
             Long crtUtc = Long.parseLong(this.dt.getValue().toString());
@@ -200,6 +228,10 @@ public class WeatherForecast {
         }
     }
 
+    /**
+     * Method that computes the current Time as HH:mm
+     * @return Current Time
+     */
     public StringProperty getCrtTime()
     {
         try {
