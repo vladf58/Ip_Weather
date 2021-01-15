@@ -1,4 +1,4 @@
-package mtaWeather.controller;
+package mtaWeather.model;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;

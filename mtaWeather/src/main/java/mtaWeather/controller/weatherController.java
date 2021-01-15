@@ -1,9 +1,6 @@
 package mtaWeather.controller;
 
-import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -11,12 +8,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import mtaWeather.Exceptions.weatherException;
+import mtaWeather.model.CitiesData;
 import mtaWeather.model.City;
 import mtaWeather.model.WeatherForecast;
 import mtaWeather.model.WeekForecast;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class weatherController {
 
@@ -105,6 +102,15 @@ public class weatherController {
     @FXML
     private ImageView day5Img;
 
+    @FXML
+    private ImageView tempImg;
+
+    @FXML
+    private ImageView humidityImg;
+
+    @FXML
+    private ImageView windImg;
+
     private ArrayList<ImageView> dayImgs;
     private ArrayList<Label> dayLabels;
     private ArrayList<GridPane> dayGrids;
@@ -119,6 +125,13 @@ public class weatherController {
         countryDropDown.setItems(loadedCities.getCountries());
         countryDropDown.setValue(loadedCities.getCountries().get(0));
     }
+
+    private void setLocationOnIp(){
+        countryDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getCountry().getValue());
+        cityDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getName().getValue());
+
+    }
+
 
     private void loadCityDropDown(String Country){
         cityDropDown.setItems(loadedCities.getCities(countryDropDown.getValue().toString()));
@@ -162,6 +175,16 @@ public class weatherController {
 
     }
 
+    @FXML
+    private void setForecastImg(){
+        this.tempImg.setImage(new Image(this.getClass().getResource("/icons/thermometer.png").toString()));
+
+        this.humidityImg.setImage(new Image(this.getClass().getResource("/icons/rain.png").toString()));
+
+        this.windImg.setImage(new Image(this.getClass().getResource("/icons/wind.png").toString()));
+
+
+    }
 
     @FXML
     private void initialize(){
@@ -180,6 +203,10 @@ public class weatherController {
              */
             this.countryFlagImg.preserveRatioProperty().setValue(false);
             this.weatherIconImg.preserveRatioProperty().setValue(false);
+            this.windImg.preserveRatioProperty().setValue(false);
+            this.humidityImg.preserveRatioProperty().setValue(false);
+            this.tempImg.preserveRatioProperty().setValue(false);
+            setForecastImg();
 
             /**
              * Add events
@@ -224,13 +251,8 @@ public class weatherController {
 
 
                             }
-
-
-
-
-
                         }
-                        });
+                    });
 
 
             //Event for grid Click
@@ -245,6 +267,7 @@ public class weatherController {
              * Display countries
              */
             loadCoutryDropDown();
+            setLocationOnIp();
 
 
 

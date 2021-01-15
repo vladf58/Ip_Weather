@@ -188,19 +188,21 @@ public class WeatherForecast {
     public StringProperty getCrtDate(){
         Long crtUtc = Long.parseLong(this.dt.getValue().toString());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("DD-MM-YYYY");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         String formattedDtm = Instant.ofEpochSecond(crtUtc).atZone(ZoneId.of("UTC")).format(formatter);
         return new SimpleStringProperty(formattedDtm);
     }
 
-    public StringProperty getCrtTime(){
+    public StringProperty getCrtTime()
+    {
         Long crtUtc = Long.parseLong(this.dt.getValue().toString());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
         String formattedDtm = Instant.ofEpochSecond(crtUtc).atZone(ZoneId.of("UTC")).format(formatter);
-        return new SimpleStringProperty(formattedDtm);    }
+        return new SimpleStringProperty(formattedDtm);
+    }
 
 
 
