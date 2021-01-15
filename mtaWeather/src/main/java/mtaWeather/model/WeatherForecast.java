@@ -2,6 +2,8 @@ package mtaWeather.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import mtaWeather.Exceptions.BadJSONException;
+import mtaWeather.Exceptions.MtaWeatherException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -116,93 +118,102 @@ public class WeatherForecast {
     public StringProperty getWind(){
         return new SimpleStringProperty(wind.getValue() +" "+windMetric);
     }
-    public WeatherForecast(JSONObject weatherJSON, Long shiftTimezone){
-
-        /**
-         * Get dt
-         */
-        Long dtUTC = Long.parseLong(weatherJSON.get(dtJSON).toString());
-        Long crtTime= dtUTC+shiftTimezone;
-        this.dt= new SimpleStringProperty(crtTime.toString());
-
-        /**
-         * Access main description
-         * weatherDescriptionJSON
-         */
-        this.weatherMainDescription= new SimpleStringProperty(weatherJSON.getJSONArray(weatherArrayJSON).getJSONObject(0).get(weatherDescriptionJSON).toString());
-
-        /**
-         * Access weather icon
-         */
-
-        this.WeatherIcon = new SimpleStringProperty(weatherJSON.getJSONArray(weatherArrayJSON).getJSONObject(0).get(weatherIconJSON).toString());
-
-        /**
-         * Access main temperature values
-         */
-
+    public WeatherForecast(JSONObject weatherJSON, Long shiftTimezone) throws BadJSONException {
         try {
-            this.weatherTemp = new SimpleStringProperty(weatherJSON.getJSONObject(tempJSON).get(dayTempJSON).toString());
+            /**
+             * Access dt member
+             */
+            Long dtUTC = Long.parseLong(weatherJSON.get(dtJSON).toString());
+            Long crtTime = dtUTC + shiftTimezone;
+            this.dt = new SimpleStringProperty(crtTime.toString());
+            /**
+             * Access main description
+             * weatherDescriptionJSON
+             */
+            this.weatherMainDescription = new SimpleStringProperty(weatherJSON.getJSONArray(weatherArrayJSON).getJSONObject(0).get(weatherDescriptionJSON).toString());
+
+            /**
+             * Access weather icon
+             */
+
+            this.WeatherIcon = new SimpleStringProperty(weatherJSON.getJSONArray(weatherArrayJSON).getJSONObject(0).get(weatherIconJSON).toString());
+
+            /**
+             * Access main temperature values
+             */
+
+            try {
+                this.weatherTemp = new SimpleStringProperty(weatherJSON.getJSONObject(tempJSON).get(dayTempJSON).toString());
+            } catch (JSONException e) {
+                this.weatherTemp = new SimpleStringProperty(weatherJSON.get(tempJSON).toString());
+            }
+            /**
+             * Get weather feels like
+             */
+            try {
+                this.weatherFeelsLike = new SimpleStringProperty(weatherJSON.getJSONObject(feelsLikeJSON).get(dayTempJSON).toString());
+            } catch (JSONException e) {
+                this.weatherFeelsLike = new SimpleStringProperty(weatherJSON.get(feelsLikeJSON).toString());
+            }
+            /**
+             * Get temp min& max
+             */
+            try {
+                this.tempMin = new SimpleStringProperty(weatherJSON.getJSONObject(tempJSON).get(tempMinJSON).toString());
+                this.tempMax = new SimpleStringProperty(weatherJSON.getJSONObject(tempJSON).get(tempMaxJSON).toString());
+            } catch (JSONException e) {
+                this.tempMin = null;
+                this.tempMax = null;
+            }
+            /**
+             *Get humidity
+             */
+            this.humidity = new SimpleStringProperty(weatherJSON.get(humidityJSON).toString());
+
+            /**
+             * Get clouds percent
+             */
+            this.cloudsPercent = new SimpleStringProperty(weatherJSON.get(cloudsArray).toString());
+
+            /**
+             * get Wind
+             */
+            this.wind = new SimpleStringProperty(weatherJSON.get(windJSON).toString());
+
         }
         catch (JSONException e){
-            this.weatherTemp =new SimpleStringProperty(weatherJSON.get(tempJSON).toString());
+            throw new BadJSONException("Bad response received from the weather server!");
         }
-        /**
-         * Get weather feels like
-         */
-        try {
-            this.weatherFeelsLike = new SimpleStringProperty(weatherJSON.getJSONObject(feelsLikeJSON).get(dayTempJSON).toString());
-        }
-        catch (JSONException e){
-            this.weatherFeelsLike=new SimpleStringProperty(weatherJSON.get(feelsLikeJSON).toString());
-        }
-        /**
-         * Get temp min& max
-         */
-        try {
-            this.tempMin = new SimpleStringProperty(weatherJSON.getJSONObject(tempJSON).get(tempMinJSON).toString());
-            this.tempMax = new SimpleStringProperty(weatherJSON.getJSONObject(tempJSON).get(tempMaxJSON).toString());
-        }
-        catch (JSONException e){
-            this.tempMin = null;
-            this.tempMax =null;
-        }
-        /**
-         *Get humidity
-         */
-        this.humidity = new SimpleStringProperty(weatherJSON.get(humidityJSON).toString());
-
-        /**
-         * Get clouds percent
-         */
-        this.cloudsPercent = new SimpleStringProperty(weatherJSON.get(cloudsArray).toString());
-
-        /**
-         * get Wind
-         */
-        this.wind=new SimpleStringProperty(weatherJSON.get(windJSON).toString());
-
-
     }
 
     public StringProperty getCrtDate(){
-        Long crtUtc = Long.parseLong(this.dt.getValue().toString());
+        try {
+            Long crtUtc = Long.parseLong(this.dt.getValue().toString());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        String formattedDtm = Instant.ofEpochSecond(crtUtc).atZone(ZoneId.of("UTC")).format(formatter);
-        return new SimpleStringProperty(formattedDtm);
+            String formattedDtm = Instant.ofEpochSecond(crtUtc).atZone(ZoneId.of("UTC")).format(formatter);
+            return new SimpleStringProperty(formattedDtm);
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     public StringProperty getCrtTime()
     {
-        Long crtUtc = Long.parseLong(this.dt.getValue().toString());
+        try {
+            Long crtUtc = Long.parseLong(this.dt.getValue().toString());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 
-        String formattedDtm = Instant.ofEpochSecond(crtUtc).atZone(ZoneId.of("UTC")).format(formatter);
-        return new SimpleStringProperty(formattedDtm);
-    }
+            String formattedDtm = Instant.ofEpochSecond(crtUtc).atZone(ZoneId.of("UTC")).format(formatter);
+            return new SimpleStringProperty(formattedDtm);
+        }
+        catch (Exception e){
+            return null;
+        }
+        }
 
 
 

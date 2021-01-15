@@ -1,13 +1,16 @@
 package mtaWeather.controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import mtaWeather.Exceptions.weatherException;
+import mtaWeather.Exceptions.BadConnException;
+import mtaWeather.Exceptions.BadJSONException;
+import mtaWeather.Exceptions.MtaWeatherException;
 import mtaWeather.model.CitiesData;
 import mtaWeather.model.City;
 import mtaWeather.model.WeatherForecast;
@@ -196,7 +199,7 @@ public class weatherController {
             /**
              * Load cities
              */
-            this.loadedCities = new CitiesData();
+            this.loadedCities = new LocationFactory().generateCitiesFromDefaultCsv();
 
             /**
              * Set static images
@@ -221,41 +224,58 @@ public class weatherController {
             cityDropDown.getSelectionModel().selectedItemProperty().addListener(
                     (observable, oldValue, newValue) -> {
                         if(newValue != null) {
-
                             /**
                              * Display banner
                              */
                             this.labelBanner.setText(newValue.toString() + ", " + countryDropDown.getValue().toString());
+                            /**
+                             * Set the current city
+                             */
                             this.crtCity= this.loadedCities.getCity(countryDropDown.getValue().toString(),newValue.toString());
 
-
                             if(crtCity != null) {
-                                loadCountryImg();;
+                                /**
+                                 * Set the country flag
+                                 */
+                                loadCountryImg();
+                                ;
                                 /**
                                  * Get weather object
                                  *
                                  */
-                                WeekForecast crtWeekForecast= new WeekForecast(WeatherApiUser.getWeatherByCity(crtCity));
-                                WeatherForecast crtForecast = crtWeekForecast.getCrtForecast();
-                                this.crtForecast =crtWeekForecast;
+                                try {
+                                    WeekForecast crtWeekForecast = new WeekForecast(WeatherApiUser.getWeatherByCity(crtCity));
 
-                                /**
-                                 * Load info with the current data
-                                 */
-                                loadMainPannel(crtForecast);
+                                    WeatherForecast crtForecast = crtWeekForecast.getCrtForecast();
+                                    this.crtForecast = crtWeekForecast;
 
-                                /**
-                                 * Load the daily forecast
-                                 */
-                                loadDailyPannel(crtWeekForecast);
+                                    /**
+                                     * Load info with the current data
+                                     */
+                                    loadMainPannel(crtForecast);
+
+                                    /**
+                                     * Load the daily forecast
+                                     */
+                                    loadDailyPannel(crtWeekForecast);
 
 
+                                    }
+                                catch (BadConnException | BadJSONException e){
+                                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                                    errorAlert.setHeaderText("There was an exception");
+                                    errorAlert.setContentText(e.getMessage());
+                                    errorAlert.showAndWait();
+                                }
                             }
                         }
-                    });
+                    }
+                );
 
 
-            //Event for grid Click
+            /**
+             * Load the 7 days forecast in gui
+             */
             for(Integer i=0; i<dayGrids.size();i++){
                 Integer finalI = i;
                 dayGrids.get(i).setOnMouseClicked(observable -> {
@@ -268,49 +288,53 @@ public class weatherController {
              */
             loadCoutryDropDown();
             setLocationOnIp();
-
-
-
-
         }
-        catch (weatherException e){
-            System.out.println(e.getMessage());
+        catch (MtaWeatherException e){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("There was an exception");
+            errorAlert.setContentText(e.getMessage());
+            errorAlert.showAndWait();
         }
     }
 
     @FXML
-    private void loadMainPannel(WeatherForecast crtForecast){
+    private void loadMainPannel(WeatherForecast crtForecast) {
+        if (crtForecast == null) {
+            this.weatherIconImg.setImage(new Image(this.getClass().getResource("/icons/sad.png").toString()));
+            this.weatherDescriptionLabel.setText("No description for this day :(!");
+        }
+        else {
+            /**
+             * Set the date
+             */
+            this.dateLabel.setText(crtForecast.getCrtDate().getValue());
 
-        /**
-         * Set the date
-         */
-        this.dateLabel.setText(crtForecast.getCrtDate().getValue());
+            /**
+             * Set the time
+             *
+             */
+            this.timeLabel.setText(crtForecast.getCrtTime().getValue());
 
-        /**
-         * Set the time
-         *
-         */
-        this.timeLabel.setText(crtForecast.getCrtTime().getValue());
+            /**
+             * Set the image
+             */
+            String iconUrl = WeatherIconConstructor.getImageUrl(crtForecast.getWeatherIcon().getValue());
+            this.weatherIconImg.setImage(new Image(iconUrl));
 
-        /**
-         * Set the image
-         */
-        String iconUrl=WeatherIconConstructor.getImageUrl(crtForecast.getWeatherIcon().getValue());
-        this.weatherIconImg.setImage(new Image(iconUrl));
+            /**
+             * Set description
+             */
+            String crtForecstDescription = crtForecast.getWeatherMainDescription().getValue();
+            this.weatherDescriptionLabel.setText(crtForecstDescription.substring(0, 1).toUpperCase() + crtForecstDescription.substring(1));
 
-        /**
-         * Set description
-         */
-        String crtForecstDescription=crtForecast.getWeatherMainDescription().getValue();
-        this.weatherDescriptionLabel.setText(crtForecstDescription.substring(0,1).toUpperCase()+crtForecstDescription.substring(1));
+            /**
+             * Set temp values
+             */
+            this.temperatureLabel.setText(crtForecast.getWeatherTemp().getValue());
+            this.windLabel.setText(crtForecast.getWind().getValue());
+            this.humidityLabel.setText(crtForecast.getHumidity().getValue());
 
-        /**
-         * Set temp values
-         */
-        this.temperatureLabel.setText(crtForecast.getWeatherTemp().getValue());
-        this.windLabel.setText(crtForecast.getWind().getValue());
-        this.humidityLabel.setText(crtForecast.getHumidity().getValue());
-
+        }
     }
 
     @FXML
@@ -331,7 +355,6 @@ public class weatherController {
         for(Integer i=0;i<dayLabels.size();i++){
             Label crtLabel=dayLabels.get(i);
             crtLabel.setText(crtForecast.getForecast().get(i).getCrtDate().getValue());
-
         }
 
     }
@@ -349,11 +372,18 @@ public class weatherController {
 
     @FXML
     private void reinitGuiWithSelectedDay(Integer index){
-        WeatherForecast crtWeather= crtForecast.getForecast().get(index);
-        loadMainPannel(crtWeather);
+        WeatherForecast crtWeather;
+        try {
+            crtWeather = crtForecast.getForecast().get(index);
+        }
+        catch (Exception e){
+            crtWeather =null;
+        }
+            loadMainPannel(crtWeather);
     }
 
     public weatherController(){
+
     }
 
 }

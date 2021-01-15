@@ -1,5 +1,6 @@
 package mtaWeather.controller;
 import javafx.beans.property.StringProperty;
+import mtaWeather.Exceptions.BadConnException;
 import mtaWeather.model.City;
 import org.json.JSONObject;
 
@@ -20,7 +21,7 @@ public class WeatherApiUser {
     private static final String unitsArgs="&units=metric";
     private static final String appidArg="&appid=";
 
-    private static String getJsonResponse(String urlAddr){
+    private static String getJsonResponse(String urlAddr) throws BadConnException{
         try {
             URL url = new URL(urlAddr);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -36,36 +37,23 @@ public class WeatherApiUser {
             return content.toString();
         }
         catch (Exception e){
-            return null;
+            throw new BadConnException("Could not connect to OpenWeather Server!");
         }
 
     }
 
-    public static JSONObject getWeatherByCity(City city){
-        try {
+    public static JSONObject getWeatherByCity(City city) throws  BadConnException{
             String lat = city.getLat().getValue().toString();
             String lng = city.getLng().getValue().toString();
 
             String urlAddr = baseUrl+"lat="+lat+"&lon="+lng+unitsArgs+langArgs+appidArg+APIkey;
 
             return new JSONObject(getJsonResponse(urlAddr));
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-    public static JSONObject getWeatherByCoord(String lat, String lng){
-        try{
-            String urlAddr = baseUrl+"lat="+lat+"&lon="+lng+unitsArgs+langArgs+appidArg+APIkey;
-            URL url = new URL(urlAddr);
-            return new JSONObject(getJsonResponse(urlAddr));
 
-        }
-        catch (Exception e){
-            e.getMessage();
-            return null;
-        }
+    }
+    public static JSONObject getWeatherByCoord(String lat, String lng) throws  BadConnException{
+            String urlAddr = baseUrl+"lat="+lat+"&lon="+lng+unitsArgs+langArgs+appidArg+APIkey;
+            return new JSONObject(getJsonResponse(urlAddr));
     }
 
 

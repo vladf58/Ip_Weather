@@ -1,6 +1,7 @@
 package mtaWeather.model;
 
 import javafx.beans.property.SimpleStringProperty;
+import mtaWeather.Exceptions.BadJSONException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -32,29 +33,37 @@ public class WeekForecast {
     private WeatherForecast crtForecast;
     private Long timezoneOffset;
 
-    public WeekForecast(JSONObject weatherJSON){
+    public WeekForecast(JSONObject weatherJSON) throws  BadJSONException{
         /**
          * Current timezone
          */
 
         this.forecast = new ArrayList<WeatherForecast>();
-        this.timezoneOffset=Long.parseLong(weatherJSON.get(timezoneOffsetJSON).toString());
+        this.timezoneOffset = Long.parseLong(weatherJSON.get(timezoneOffsetJSON).toString());
 
         /**
          * Current weather
          */
-        crtForecast= new WeatherForecast(weatherJSON.getJSONObject(currentJSON),timezoneOffset);
-
+        try {
+            crtForecast = new WeatherForecast(weatherJSON.getJSONObject(currentJSON), timezoneOffset);
+        }
+        catch (BadJSONException e){
+            throw new BadJSONException("Could not get the current weather from the server for this location!");
+        }
 
         /**
          * Access days
          */
         JSONArray dailyWeatherJsonArray = weatherJSON.getJSONArray(dailyJSON);
 
-        for(Integer index=0;index<dailyWeatherJsonArray.length();index++)
-        {
-            this.forecast.add(new WeatherForecast(dailyWeatherJsonArray.getJSONObject(index),timezoneOffset));
-        }
+        for (Integer index = 0; index < dailyWeatherJsonArray.length(); index++) {
+            try {
+                this.forecast.add(new WeatherForecast(dailyWeatherJsonArray.getJSONObject(index), timezoneOffset));
+            }
+            catch (BadJSONException e){
+                this.forecast.add(null);
+            }
+            }
 
     }
 

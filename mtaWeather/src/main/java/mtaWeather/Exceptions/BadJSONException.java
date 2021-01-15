@@ -1,13 +1,12 @@
 package mtaWeather.Exceptions;
 
-public class exceptionBadCSV extends weatherException {
+public class BadJSONException extends MtaWeatherException {
     private String message;
-
     @Override
     public String getMessage(){
         return this.message;
     }
-    public exceptionBadCSV(String message){
+    public BadJSONException(String message){
         this.message=message;
     }
 }
