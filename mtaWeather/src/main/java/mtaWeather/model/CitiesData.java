@@ -36,6 +36,10 @@ public class CitiesData {
         this.citiesDB = citiesDB;
 
     }
+
+    public void addCity(City city){
+        this.citiesDB.add(city);
+    }
     public String getIsoOfCountry(String country){
         for(City city: citiesDB){
             if(city.getCountry().getValue().toString().equals(country)){

@@ -1,10 +1,9 @@
 package mtaWeather.controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -131,6 +130,11 @@ public class weatherController {
     private ImageView windImg;
 
     /**
+     * The button for adding a new location.
+     */
+    @FXML
+    private Button newLocationButton;
+    /**
      * Arrays for holding lower daily forecast objects
      */
     private ArrayList<ImageView> dayImgs;
@@ -179,6 +183,30 @@ public class weatherController {
         }
     }
 
+    /**
+     * Method for adding a new location
+     */
+    private void addNewLocation(){
+        String newCity = this.citySelect.getText();
+        String newCountry= this.countrySelect.getText();
+        String newLat = this.latSelect.getText();
+        String newLng = this.lngSelect.getText();
+
+        CitiesData newDB =(new LocationFactory().addNewCityToDefaultCSV(newCity,newCountry,newLat,newLng));
+        if(newDB != null){
+
+            this.loadedCities =newDB;
+            loadCityDropDown(newCountry);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Information Dialog");
+            alert.setHeaderText("Location added!");
+            alert.setContentText(newCity+" has been added to the cities database!");
+
+            alert.showAndWait();
+        }
+
+    }
 
     /**
      * Method responsible for initializing the dayLabels, dayGrids and dayImgs arrays.
@@ -423,6 +451,16 @@ public class weatherController {
                         }
                     }
                 );
+            /**
+             * New location button clicked event
+             */
+            EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent e)
+                {
+                    addNewLocation();
+                }
+            };
+            newLocationButton.setOnAction(event);
 
 
             /**
