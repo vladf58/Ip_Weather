@@ -394,9 +394,15 @@ public class weatherController {
              */
             countryDropDown.getSelectionModel().selectedItemProperty().addListener(
                     (observable, oldValue, newValue) -> {
-                        loadCityDropDown(newValue.toString());
-                        cityDropDown.setValue(cityDropDown.getItems().get(0));
-
+                        try {
+                            loadCityDropDown(newValue.toString());
+                            cityDropDown.setValue(cityDropDown.getItems().get(0));
+                        }
+                        catch (Exception e){
+                            /**
+                             * Sometimes this event can trigger without a selection
+                             */
+                        }
                     });
 
             /**
