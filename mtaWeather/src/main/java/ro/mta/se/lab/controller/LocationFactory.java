@@ -167,13 +167,25 @@ public class LocationFactory {
      */
     public CitiesData addNewCityToCSVFile(String CSVFile,String cityName, String country,String lat, String lng){
         /**
+         * Make sure we don't have null values
+         */
+        if(cityName.length()==0 || country.length()==0 || lat.length()==0||lng.length()==0){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("There was an exception");
+            errorAlert.setContentText("Can't add empty Values!");
+            errorAlert.showAndWait();
+            return null;
+        }
+
+
+        /**
          * Verify city name
          *
          */
         if (cityName.contains(CSVSeparator)){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("There was an exception");
-            errorAlert.setContentText("Could not add the new location because the city name contains the CSV separator:"+CSVSeparator+". Try removing it!");
+            errorAlert.setContentText("',' Is an invalid char. Remove it!");
             errorAlert.showAndWait();
             return null;
 
@@ -181,10 +193,10 @@ public class LocationFactory {
         /**
          * Verify country name
          */
-        if (cityName.contains(CSVSeparator)){
+        if (country.contains(CSVSeparator)){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("There was an exception");
-            errorAlert.setContentText("Could not add the new location because the country name contains the CSV separator:"+CSVSeparator+". Try removing it!");
+            errorAlert.setContentText("',' Is an invalid char. Remove it!");
             errorAlert.showAndWait();
             return null;
 
@@ -199,7 +211,7 @@ public class LocationFactory {
 
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("There was an exception");
-            errorAlert.setContentText("Could not add the new location because the latitude is not a number");
+            errorAlert.setContentText("Latitude is not a number!");
             errorAlert.showAndWait();
             return null;
         }
@@ -240,9 +252,9 @@ public class LocationFactory {
         if(!defaultDB.getCountries().contains(country)){
             /**
              * The country doesn't exist in the csv --> Can't search for the flag
-             * The user might not want to add it
+             * Let the user know
              */
-            Alert alert = new Alert(Alert.AlertType.WARNING, "The country you want to add is not in the current CSV file, you can still add it but the app won't be able to display the flag. Do you still want to add it?");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "The Country you want to add is not in the current database! Can't display its flag!");
             alert.setTitle("Missing Country.");
             Optional<ButtonType> result = alert.showAndWait();
 
@@ -295,6 +307,18 @@ public class LocationFactory {
      */
     public CitiesData addNewCityToDefaultCSV(String cityName, String country,String lat, String lng){
         /**
+         * Make sure we don't have null values
+         */
+        if(cityName.length()==0 || country.length()==0 || lat.length()==0||lng.length()==0){
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setHeaderText("There was an exception");
+            errorAlert.setContentText("Can't add empty Values!");
+            errorAlert.showAndWait();
+            return null;
+        }
+
+
+        /**
          * The ISO2 id for the country
          */
         String newISO2 = defaultISO2;
@@ -305,7 +329,7 @@ public class LocationFactory {
         if (cityName.contains(CSVSeparator)){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("There was an exception");
-            errorAlert.setContentText("Could not add the new location because the city name contains the CSV separator:"+CSVSeparator+". Try removing it!");
+            errorAlert.setContentText("',' Is an invalid char. Remove it!");
             errorAlert.showAndWait();
             return null;
 
@@ -313,10 +337,10 @@ public class LocationFactory {
         /**
          * Verify country name
          */
-        if (cityName.contains(CSVSeparator)){
+        if (country.contains(CSVSeparator)){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("There was an exception");
-            errorAlert.setContentText("Could not add the new location because the country name contains the CSV separator:"+CSVSeparator+". Try removing it!");
+            errorAlert.setContentText("',' Is an invalid char. Remove it!");
             errorAlert.showAndWait();
             return null;
 
@@ -331,7 +355,7 @@ public class LocationFactory {
 
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("There was an exception");
-            errorAlert.setContentText("Could not add the new location because the latitude is not a number");
+            errorAlert.setContentText("The latitude is not a number!");
             errorAlert.showAndWait();
             return null;
         }
@@ -346,7 +370,7 @@ public class LocationFactory {
 
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setHeaderText("There was an exception");
-            errorAlert.setContentText("Could not add the new location because the longitude is not a number");
+            errorAlert.setContentText("The longitude is not a number!");
             errorAlert.showAndWait();
             return null;
         }
@@ -370,11 +394,11 @@ public class LocationFactory {
          * Check to see if the country exists
          */
         if(!defaultDB.getCountries().contains(country)){
-            /**
+             /**
              * The country doesn't exist in the csv --> Can't search for the flag
-             * The user might not want to add it
+             * Let the user know
              */
-            Alert alert = new Alert(Alert.AlertType.WARNING, "The country you want to add is not in the current CSV file, you can still add it but the app won't be able to display the flag. Do you still want to add it?");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "The Country you want to add is not in the current database! Can't display its flag!");
             alert.setTitle("Missing Country.");
             Optional<ButtonType> result = alert.showAndWait();
 
