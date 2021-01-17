@@ -29,12 +29,12 @@ Aplicația este intuitiv de folosit.
 Aplicația va încerca să afișeze și steagul țării selectate prin intermediul unui API.
 Fișierul de log se află by default în /target/classes/controller/files/log.txt
 
-## Fisiere
-- /target/classes/controller/files/log.txt - Fisierul log folosit by default ca si fisier de log.
-- /target/classes/controller/cities/worldcities.csv - Fisier csv ce contine datele cu diferitele orase
-- /target/classes/controller/icons - Folder cu imagini folosite de interfata grafica
-- /target/classes/view/weatherAppView.fxml - Interfata grafica creata cu SceneBuilder
-- /target/classes/view/style.css - stylesheet folosit de interfata grafica.
+## Fișiere
+- /target/classes/controller/files/log.txt - Fișierul log folosit by default ca și fișier de log.
+- /target/classes/controller/cities/worldcities.csv - Fișier CSV ce conține datele cu diferitele orase
+- /target/classes/controller/icons - Folder cu imagini folosite de interfața grafică
+- /target/classes/view/weatherAppView.fxml - Interfața grafică creată cu SceneBuilder
+- /target/classes/view/style.css - Stylesheet folosit de interfața grafică.
 
 ## Referințe
  * http://www.geognos.com -API pentru determinarea steagului pentru fiecare țară.
