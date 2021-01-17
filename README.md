@@ -9,7 +9,7 @@ Aplicația are următoarele funcționalități
 - Afișarea vremii la momentul curent pentru o locație dorită;
 - Afișarea prognozei meteo pentru următoarele 5 zile.
 
-##Utilizare
+## Utilizare
 Aplicația este intuitiv de folosit.
 - Aplicația va încerca să stabilească locația pe baza adresei IP cu ajutorul unui API.
 - Din meniul din stânga se alege țara dorită dintr-o listă încărcată pe baza unui fișier csv;
@@ -18,7 +18,7 @@ Aplicația este intuitiv de folosit.
 
 Aplicația va încerca să afișeze și steagul țării selectate prin intermediul unui API.
 
-##Referințe
+## Referințe
  * http://www.geognos.com -API pentru determinarea steagului pentru fiecare țară.
 *  https://ipapi.co -API pentru determinarea locației
 * https://openweathermap.org -API folosit pentru determinarea datelor meteorlogice
