@@ -15,7 +15,7 @@ public class FlagApiUser {
     /**
      * A default icon in case the ISO2 is missing
      */
-    private static final String defaultIconName="/icons/compass.png";
+    private static final String defaultIconName= "/controller/icons/compass.png";
     /**
      * Extension of the image
      */

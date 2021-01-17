@@ -12,7 +12,7 @@ public class FlagApiUserTest {
         /**
          * If the iso2 is null the default image should be loaded
          */
-        assertEquals(FlagApiUser.getImageOfFlagUrl("null"),this.getClass().getResource("/icons/compass.png").toString());
+        assertEquals(FlagApiUser.getImageOfFlagUrl("null"),this.getClass().getResource("/controller/icons/compass.png").toString());
     }
 
 

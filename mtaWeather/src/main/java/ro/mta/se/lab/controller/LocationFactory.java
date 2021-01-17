@@ -27,7 +27,7 @@ public class LocationFactory {
     /**
      * Local definitions
      */
-    private static final String defaultCitiesFile="/cities/worldcities.csv";
+    private static final String defaultCitiesFile= "/controller/cities/worldcities.csv";
     private static final String defaultColumns[]= {"city","lat","lng","country","id","iso2"};
     private static final String defaultID="0";
     private static final String defaultISO2="null";

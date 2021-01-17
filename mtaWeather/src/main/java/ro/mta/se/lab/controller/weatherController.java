@@ -7,10 +7,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import ro.mta.se.lab.Exceptions.BadConnException;
-import ro.mta.se.lab.Exceptions.BadJSONException;
-import ro.mta.se.lab.Exceptions.InvalidCityException;
-import ro.mta.se.lab.Exceptions.MtaWeatherException;
+import ro.mta.se.lab.Exceptions.*;
 import ro.mta.se.lab.model.CitiesData;
 import ro.mta.se.lab.model.City;
 import ro.mta.se.lab.model.WeatherForecast;
@@ -162,7 +159,6 @@ public class weatherController {
      */
     private void loadCoutryDropDown(){
         countryDropDown.setItems(loadedCities.getCountries());
-        countryDropDown.setValue(loadedCities.getCountries().get(0));
     }
 
     /**
@@ -170,7 +166,6 @@ public class weatherController {
      */
     private void loadCityDropDown(String Country){
         cityDropDown.setItems(loadedCities.getCities(countryDropDown.getValue().toString()));
-        cityDropDown.setValue(cityDropDown.getItems().get(0));
 
     }
 
@@ -182,12 +177,16 @@ public class weatherController {
             countryDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getCountry().getValue());
             cityDropDown.setValue(IpApiUser.getCityByCrtIp(loadedCities).getName().getValue());
         }
+        else{
+            countryDropDown.setValue(loadedCities.getCountries().get(0));
+            cityDropDown.setValue(cityDropDown.getItems().get(0));
+        }
     }
 
     /**
      * Method for adding a new location
      */
-    private void addNewLocation(){
+    private void addNewLocation() throws BadLogException {
         String newCity = this.citySelect.getText();
         String newCountry= this.countrySelect.getText();
         String newLat = this.latSelect.getText();
@@ -197,6 +196,7 @@ public class weatherController {
         if(newDB != null){
 
             this.loadedCities =newDB;
+            loadCoutryDropDown();
             loadCityDropDown(newCountry);
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -205,6 +205,7 @@ public class weatherController {
             alert.setContentText(newCity+" has been added to the cities database!");
 
             alert.showAndWait();
+            Logger.logToFile("A new location was added:"+newCountry+", "+newCity);
         }
 
     }
@@ -253,9 +254,9 @@ public class weatherController {
      */
     @FXML
     private void setForecastImg(){
-        this.tempImg.setImage(new Image(this.getClass().getResource("/icons/thermometer.png").toString()));
-        this.humidityImg.setImage(new Image(this.getClass().getResource("/icons/rain.png").toString()));
-        this.windImg.setImage(new Image(this.getClass().getResource("/icons/wind.png").toString()));
+        this.tempImg.setImage(new Image(this.getClass().getResource("/controller/icons/thermometer.png").toString()));
+        this.humidityImg.setImage(new Image(this.getClass().getResource("/controller/icons/rain.png").toString()));
+        this.windImg.setImage(new Image(this.getClass().getResource("/controller/icons/wind.png").toString()));
 
 
     }
@@ -267,7 +268,7 @@ public class weatherController {
     @FXML
     private void loadMainPannel(WeatherForecast crtForecast) {
         if (crtForecast == null) {
-            this.weatherIconImg.setImage(new Image(this.getClass().getResource("/icons/sad.png").toString()));
+            this.weatherIconImg.setImage(new Image(this.getClass().getResource("/controller/icons/sad.png").toString()));
             this.weatherDescriptionLabel.setText("No description for this day :(!");
         }
         else {
@@ -394,6 +395,8 @@ public class weatherController {
             countryDropDown.getSelectionModel().selectedItemProperty().addListener(
                     (observable, oldValue, newValue) -> {
                         loadCityDropDown(newValue.toString());
+                        cityDropDown.setValue(cityDropDown.getItems().get(0));
+
                     });
 
             /**
@@ -403,7 +406,16 @@ public class weatherController {
             cityDropDown.getSelectionModel().selectedItemProperty().addListener(
                     (observable, oldValue, newValue) -> {
                         if(newValue != null) {
-                            /**
+                            try {
+                                Logger.logToFile("Displayed the weather of:" + newValue.toString() + ", " + countryDropDown.getValue().toString());
+                            }
+                            catch (BadLogException e){
+                                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                                errorAlert.setHeaderText("There was an exception");
+                                errorAlert.setContentText(e.getMessage());
+                                errorAlert.showAndWait();
+                            }
+                                /**
                              * Display banner
                              */
                             this.labelBanner.setText(newValue.toString() + ", " + countryDropDown.getValue().toString());
@@ -456,7 +468,15 @@ public class weatherController {
             EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
                 public void handle(ActionEvent e)
                 {
-                    addNewLocation();
+                    try {
+                        addNewLocation();
+                    }
+                    catch (BadLogException exception){
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setHeaderText("There was an exception");
+                        errorAlert.setContentText(exception.getMessage());
+                        errorAlert.showAndWait();
+                    }
                 }
             };
             newLocationButton.setOnAction(event);
@@ -475,8 +495,9 @@ public class weatherController {
              *
              * Display countries
              */
-            loadCoutryDropDown();
             setLocationOnIp();
+            loadCoutryDropDown();
+
         }
         catch (MtaWeatherException e){
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
