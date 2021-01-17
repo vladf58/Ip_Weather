@@ -4,6 +4,12 @@ Aplicatie GUI scrisă folosind JavaFX care afișează vremea în diferite locaț
 Aceasta aplicație a fost dezvoltată ca și temă pentru laboratorul de Ingineria Programării.
 Pentru rezolvarea dependintelor am folosit Maven.
 
+# Conținut
+1. [Functionalități](#Funcționalități)
+2. [Utilizare](#Utilizare)
+3. [Fișier](#Fișiere)
+4. [Referințe](#Referințe)
+
 ## Funcționalități
 Aplicația are următoarele funcționalități
 - Posibilitatea determinării locației în funcție de adresa IP;
