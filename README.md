@@ -1,4 +1,4 @@
-# mtaWeather
+# mtaWeather :cloud:
 
 Aplicatie GUI scrisă folosind JavaFX care afișează vremea în diferite locații.
 Aceasta aplicație a fost dezvoltată ca și temă pentru laboratorul de Ingineria Programării.
@@ -35,6 +35,9 @@ Fișierul de log se află by default în /target/classes/controller/files/log.tx
 - /target/classes/controller/icons - Folder cu imagini folosite de interfața grafică
 - /target/classes/view/weatherAppView.fxml - Interfața grafică creată cu SceneBuilder
 - /target/classes/view/style.css - Stylesheet folosit de interfața grafică.
+
+## Dezvoltator
+- Florea Vlad
 
 ## Referințe
  * http://www.geognos.com -API pentru determinarea steagului pentru fiecare țară.
