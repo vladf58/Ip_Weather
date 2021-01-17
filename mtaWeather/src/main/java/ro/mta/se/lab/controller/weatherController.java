@@ -266,7 +266,7 @@ public class weatherController {
      * @param crtForecast -> Current forecast for the day
      */
     @FXML
-    private void loadMainPannel(WeatherForecast crtForecast) {
+    private void loadMainPanel(WeatherForecast crtForecast) {
         if (crtForecast == null) {
             this.weatherIconImg.setImage(new Image(this.getClass().getResource("/controller/icons/sad.png").toString()));
             this.weatherDescriptionLabel.setText("No description for this day :(!");
@@ -310,7 +310,7 @@ public class weatherController {
      * @param crtForecast --> current forecast for the week
      */
     @FXML
-    private void loadDailyPannel(WeekForecast crtForecast){
+    private void loadDailyPanel(WeekForecast crtForecast){
         /**
          Load images
          */
@@ -356,7 +356,7 @@ public class weatherController {
         catch (Exception e){
             crtWeather =null;
         }
-        loadMainPannel(crtWeather);
+        loadMainPanel(crtWeather);
     }
 
     /**
@@ -443,12 +443,12 @@ public class weatherController {
                                     /**
                                      * Load info with the current data
                                      */
-                                    loadMainPannel(crtForecast);
+                                    loadMainPanel(crtForecast);
 
                                     /**
                                      * Load the daily forecast
                                      */
-                                    loadDailyPannel(crtWeekForecast);
+                                    loadDailyPanel(crtWeekForecast);
 
 
                                     }
