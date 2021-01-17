@@ -1,6 +1,7 @@
 # mtaWeather
 
 Aplicatie GUI scrisă folosind JavaFX care afișează vremea în diferite locații.
+Aceasta aplicație a fost dezvoltată ca și temă pentru laboratorul de Ingineria Programării.
 ## Funcționalități
 Aplicația are următoarele funcționalități
 - Posibilitatea determinării locației în funcție de adresa IP;
