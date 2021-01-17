@@ -8,6 +8,7 @@ Aplicația are următoarele funcționalități
 - Posibilitatea adăugării de locații noi prin introducerea latitudinii și longitudinii;
 - Afișarea vremii la momentul curent pentru o locație dorită;
 - Afișarea prognozei meteo pentru următoarele 5 zile.
+- Logarea într-un fișier extern a evenimentelor.
 
 ## Utilizare
 Aplicația este intuitiv de folosit.
@@ -17,6 +18,7 @@ Aplicația este intuitiv de folosit.
 - După selectarea orașului, aplicația va afișa prognoza meteo din locația selectată.
 
 Aplicația va încerca să afișeze și steagul țării selectate prin intermediul unui API.
+Fișierul de log se află by default în /target/classes/controller/files/log.txt
 
 ## Referințe
  * http://www.geognos.com -API pentru determinarea steagului pentru fiecare țară.
