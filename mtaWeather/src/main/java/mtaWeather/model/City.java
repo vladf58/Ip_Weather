@@ -18,6 +18,9 @@ import javafx.beans.property.StringProperty;
  */
 public class City {
     private StringProperty name;
+    public StringProperty nameProperty() {
+        return name;
+    }
     private StringProperty country;
     private IntegerProperty id;
     private StringProperty iso2;

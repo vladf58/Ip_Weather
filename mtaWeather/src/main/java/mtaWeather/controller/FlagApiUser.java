@@ -11,6 +11,11 @@ public class FlagApiUser {
      * Base url for the API
      */
     private static final String baseUrl="http://www.geognos.com/api/en/countries/flag/";
+
+    /**
+     * A default icon in case the ISO2 is missing
+     */
+    private static final String defaultIconName="/icons/compass.png";
     /**
      * Extension of the image
      */
@@ -22,6 +27,9 @@ public class FlagApiUser {
      * @return
      */
     public static String getImageOfFlagUrl(String iso2){
+        if(iso2.equals("null")){
+            return FlagApiUser.class.getResource(defaultIconName).toString();
+        }
         return baseUrl+iso2+extension;
     }
 

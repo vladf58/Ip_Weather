@@ -98,7 +98,7 @@ public class LocationFactory {
      * @return CitiesData
      * @throws BadCSVException
      */
-    public   CitiesData generateCitiesFromCsv(String csvFile) throws BadCSVException {
+    public  CitiesData generateCitiesFromCsv(String csvFile) throws BadCSVException {
         BufferedReader CSVReader;
         ArrayList<City> citiesDB = new ArrayList<City>();
         try{

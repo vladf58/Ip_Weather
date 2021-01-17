@@ -1,6 +1,7 @@
 package mtaWeather.controller;
 
 import mtaWeather.Exceptions.BadConnException;
+import mtaWeather.Exceptions.InvalidCityException;
 import mtaWeather.model.City;
 import org.json.JSONObject;
 
@@ -39,7 +40,7 @@ public class WeatherApiUser {
      * @return Json as a string
      * @throws BadConnException
      */
-    private static String getJsonResponse(String urlAddr) throws BadConnException{
+    private static String getServerResponse(String urlAddr) throws BadConnException{
         try {
             URL url = new URL(urlAddr);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -55,7 +56,7 @@ public class WeatherApiUser {
             return content.toString();
         }
         catch (Exception e){
-            throw new BadConnException("Could not connect to OpenWeather Server!");
+            throw new BadConnException("Could not get a response from the OpenWeather Server for the specified query!");
         }
 
     }
@@ -66,13 +67,18 @@ public class WeatherApiUser {
      * @return JSONObject -> Server's response as a JSON
      * @throws BadConnException
      */
-    public static JSONObject getWeatherByCity(City city) throws  BadConnException{
-            String lat = city.getLat().getValue().toString();
-            String lng = city.getLng().getValue().toString();
-
+    public static JSONObject getWeatherByCity(City city) throws  BadConnException, InvalidCityException{
+        String lat, lng;
+        try {
+             lat = city.getLat().getValue().toString();
+             lng = city.getLng().getValue().toString();
+        }
+        catch (Exception e){
+            throw new InvalidCityException("The selected city is invalid! Could not access lat&lng. Might be null");
+        }
             String urlAddr = baseUrl+"lat="+lat+"&lon="+lng+excludeValues+unitsArgs+langArgs+appidArg+APIkey;
 
-            return new JSONObject(getJsonResponse(urlAddr));
+            return new JSONObject(getServerResponse(urlAddr));
 
     }
     /**
@@ -83,7 +89,7 @@ public class WeatherApiUser {
      */
     public static JSONObject getWeatherByCoord(String lat, String lng) throws  BadConnException{
             String urlAddr = baseUrl+"lat="+lat+"&lon="+lng+excludeValues+unitsArgs+langArgs+appidArg+APIkey;
-            return new JSONObject(getJsonResponse(urlAddr));
+            return new JSONObject(getServerResponse(urlAddr));
     }
 
 

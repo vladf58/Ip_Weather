@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import mtaWeather.Exceptions.BadConnException;
 import mtaWeather.Exceptions.BadJSONException;
+import mtaWeather.Exceptions.InvalidCityException;
 import mtaWeather.Exceptions.MtaWeatherException;
 import mtaWeather.model.CitiesData;
 import mtaWeather.model.City;
@@ -338,8 +339,6 @@ public class weatherController {
          * Display picture
          */
         String imgUrl=FlagApiUser.getImageOfFlagUrl(crtCity.getIso2().getValue());
-
-
         this.countryFlagImg.setImage(new Image(imgUrl));
     }
 
@@ -441,7 +440,7 @@ public class weatherController {
 
 
                                     }
-                                catch (BadConnException | BadJSONException e){
+                                catch (BadConnException | BadJSONException | InvalidCityException e){
                                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                                     errorAlert.setHeaderText("There was an exception");
                                     errorAlert.setContentText(e.getMessage());

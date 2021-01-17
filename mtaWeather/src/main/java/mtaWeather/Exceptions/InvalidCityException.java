@@ -1,16 +1,15 @@
 package mtaWeather.Exceptions;
-
 /**
- * Exception thrown from a Bad CSV file
+ * Exception thrown from a Bad JSON.
  * @author Vlad Florea
  */
-public class BadCSVException extends MtaWeatherException {
+public class InvalidCityException extends MtaWeatherException{
     private String message;
     @Override
     public String getMessage(){
-        return message;
+        return this.message;
     }
-    public BadCSVException(String message){
+    public InvalidCityException(String message){
         this.message=message;
     }
 }
