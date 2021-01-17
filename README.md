@@ -23,7 +23,7 @@ Aplicația este intuitiv de folosit.
 Aplicația va încerca să afișeze și steagul țării selectate prin intermediul unui API.
 Fișierul de log se află by default în /target/classes/controller/files/log.txt
 
-##Fisiere
+## Fisiere
 - /target/classes/controller/files/log.txt - Fisierul log folosit by default ca si fisier de log.
 - /target/classes/controller/cities/worldcities.csv - Fisier csv ce contine datele cu diferitele orase
 - /target/classes/controller/icons - Folder cu imagini folosite de interfata grafica
